@@ -10,11 +10,15 @@ It has 2 modes:
 
 ### Example ###
 Short mode:
-	--------------------- Tomcat 7 Begin ------------------------
+	
+	
+	--------------------- Tomcat 7 Begin ------------------------  	
 	Unique errors: 2
 	Total num of Errors: 18
 	--------------------- Tomcat 7 End ------------------------
+
 Full mode:
+	
 	--------------------- Tomcat 7 Begin ------------------------
 	Message: SEVERE: Terminal error:
 	java.lang.ClassCastException: java.util.Collections$UnmodifiableSet cannot be cast to java.lang.Boolean
@@ -28,4 +32,4 @@ Full mode:
 	Unique errors: 2
 	Total num of Errors: 18
 	--------------------- Tomcat 7 End ------------------------
-
+	
