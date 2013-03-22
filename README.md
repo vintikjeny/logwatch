@@ -33,3 +33,6 @@ Full mode:
 	Total num of Errors: 18
 	--------------------- Tomcat 7 End ------------------------
 	
+## Java (Logback) ##
+Service provide accumulation of Java  ERROR logs, whitch created by Logback Framework in default configuration.
+You can specify typical errors, whitch only will be counted by Logwatch. Rest of messages will be marked as "unmatched" and included in Logwatch output (without stacktrace).
