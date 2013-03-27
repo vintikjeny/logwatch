@@ -20,6 +20,24 @@ my $Match_found=0;
 # typical errors, whitch only will counted
 my @Typical_errors = ();
 
+sub is_typical {
+	
+	my $input_message = $_[0];
+
+	foreach my $curr_err (@Typical_errors) {
+		if ($input_message =~ /$curr_err/) {
+			if (!exists $Matched_err{$curr_err}) {
+				$Matched_err{$curr_err} = 0;
+			}
+			$Matched_err{$curr_err}++;
+			$Total_err++;
+			return 1; #true
+			last;
+		} else {
+			return 0; #false
+		}
+	}	 
+}
 
 # main loop
 while (defined($line = <STDIN>)) {
@@ -27,7 +45,8 @@ while (defined($line = <STDIN>)) {
 
 	if ($line =~ /^((ERROR|INFO|DEBUG|WARN.*)+\s+\[.*\])/) {
 		# if previous collected message - is Error message
-		if ($Message =~ /^(ERROR)/) {
+		if (($Message =~ /^(ERROR)/) && (!is_typical($Message))) {
+
 			# if it is a new message, then add this message to hash
 			if (!exists $Unmatched_err{$Message}) {
 				$Unmatched_err{$Message} = 0;
@@ -38,28 +57,11 @@ while (defined($line = <STDIN>)) {
 			$Message="";
 		}
 
-		## Matched errors
-		foreach my $curr_err (@Typical_errors) {
-			if ($line =~ /$curr_err/) {
-				if (!exists $Matched_err{$curr_err}) {
-					$Matched_err{$curr_err} = 0;
-				}
-				$Matched_err{$curr_err}++;
-				$Total_err++;
-				$Match_found=1; #true
-				last;
-			} else {
-				$Match_found=0; #false
-			}
-		}
-		if (!$Match_found) {
 			# start new unmatched entry
 			# remove date 
 			$line =~ s/\[.*(:+[0-9]+[0-9]+){2}\,+([0-9]+){3}\]//;
 			# start recording new message 
 			$Message = $line;
-		}
-
 	# Ignorable strings (java stacktrace)
 	} elsif($line =~ /^(.+(at+\s+)|(.*Hint:)|(.*Position:))|((\s+more)$)/) {
 		next;
@@ -70,7 +72,7 @@ while (defined($line = <STDIN>)) {
 }
 
 # white last message
-if ($Message =~ /^(ERROR)/) {
+if (($Message =~ /^(ERROR)/) && (!is_typical($Message))) {
 	# if it is a new message, then add this message to hash
 	if (!exists $Unmatched_err{$Message}) {
 		$Unmatched_err{$Message} = 0;
